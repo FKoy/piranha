@@ -41,4 +41,6 @@ end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem 'mongoid', '~> 4.0.0'
+gem 'mongoid'
+gem 'nokogiri'
+gem 'whenever', :require => false
