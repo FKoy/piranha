@@ -44,3 +44,4 @@ end
 gem 'mongoid'
 gem 'nokogiri'
 gem 'whenever', :require => false
+gem "websocket-rails"
