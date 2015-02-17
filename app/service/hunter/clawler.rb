@@ -1,8 +1,4 @@
-require 'rubygems'
-require 'open-uri'
-require 'nokogiri'
-require './app/models/goods.rb'
-require 'mongoid'
+require 'net/http'
 
 module Hunter
   class Crawler
@@ -108,7 +104,7 @@ module Hunter
       oldPrice = goods.minPrice
 
       if oldPrice == nil or newPrice < oldPrice then
-        notice newPrice, asin, url
+        notice oldPrice, newPrice, asin, url
         goods.minPrice = newPrice
         goods.save
         return newPrice
@@ -119,9 +115,16 @@ module Hunter
       goods.save
     end
 
-    def notice(newPrice, asin, url)
-      ws = WebSocket::Client::Simple.connect 'ws://localhost:3000'
-      ws.send [newPirce, asin, url].join(',')
+    def notice(oldPrice, newPrice, asin, url)
+      params = {
+        'oprice' => oldPrice,
+        'nprice' => newPrice,
+        'asin' => asin,
+        'url' => url
+      }
+      url = URI.parse('http://localhost:3000/recieve/goods/info')
+      response = Net::HTTP.post_form(url, params)
+      puts response
     end
 
     def run

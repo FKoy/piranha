@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'rake'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.2'
 
@@ -44,4 +46,4 @@ end
 gem 'mongoid'
 gem 'nokogiri'
 gem 'whenever', :require => false
-gem "websocket-rails"
+gem 'websocket-rails'
