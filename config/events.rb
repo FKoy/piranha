@@ -12,5 +12,5 @@ WebsocketRails::EventMap.describe do
   #   end
   # The above will handle an event triggered on the client like `product.new`.
 
-  subscribe :websocket_bait, to: WebsocketReceiveController, :with_method => :recieve
+  subscribe :predation, to: WebsocketGateController, :with_method => :pass
 end

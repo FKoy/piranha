@@ -127,7 +127,7 @@ module Hunter
         'asin' => asin,
         'url' => url
       }
-      url = URI.parse('http://localhost:3000/recieve/goods/info')
+      url = URI.parse('http://localhost:3000/gate/notice')
       response = Net::HTTP.post_form(url, params)
       puts response
     end
