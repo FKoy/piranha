@@ -106,26 +106,33 @@ module Hunter
         return newPrice
       end
 
-      oldPrice = goods.minPrice
+      oldPrice = goods.cntPrice
+      minPrice = goods.minPrice
 
-      if oldPrice == nil or newPrice < oldPrice then
-        notice oldPrice, newPrice, asin, loc
+      if oldPrice == nil or newPrice < minPrice then
+        notice minPrice, oldPrice, newPrice, asin, loc
+        oldPrice = newPrice
         goods.minPrice = newPrice
-        goods.save
-        return newPrice
+      elsif newPrice < goods.cntPrice then
+        notice minPrice, oldPrice, newPrice, asin, loc
       end
-        return oldPrice
+
+      goods.cntPrice = newPrice
       goods.repeat += 1
       goods.avgPrice = oldPrice - (oldPrice - newPrice) / goods.repeat
+      goods.cntPrice = newPrice
       goods.save
+
+      return newPrice
     end
 
-    def notice(oldPrice, newPrice, asin, url)
+    def notice(minPrice, avgPrice, newPrice, asin, url)
       params = {
-        'oprice' => oldPrice,
+        'aprice' => avgPrice,
         'nprice' => newPrice,
-        'asin' => asin,
-        'url' => url
+        'asin'   => asin,
+        'url'    => url,
+        'mprice' => minPrice
       }
       url = URI.parse('http://localhost:3000/gate/notice')
       response = Net::HTTP.post_form(url, params)
@@ -137,7 +144,7 @@ module Hunter
       @@CATEGORIES.each do |category|
         doc = readUrl(@@URL+category)
         doc.css('.zg_title a').each do |node|
-          goodsLoc = node.attribute('href').value
+          goodsLoc = node.attribute('href').value.strip
           begin
             asin, price = fetchPrice(goodsLoc)
           rescue OpenURI::HTTPError => error

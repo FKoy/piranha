@@ -1,6 +1,7 @@
 Piranha::Application.routes.draw do
+  get "gate/path"
   root :to => "home#index"
-  post '/gate/notice', :to => "websocket_gate_controller#pass"
+  post '/gate/notice', :to => "gate#pass"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
