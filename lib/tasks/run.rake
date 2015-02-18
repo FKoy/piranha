@@ -1,7 +1,7 @@
 namespace :hunter do
 
   desc "Run Crawler"
-  task run: do
+  task run: :environment do
     crawler = Hunter::Crawler.new
     crawler.run
   end

@@ -1,9 +1,12 @@
-require 'net/http'
+require 'mongoid'
+require 'open-uri'
+require 'nokogiri'
+require './goods.rb'
 
 module Hunter
   class Crawler
-    url = 'http://www.amazon.co.jp/gp/bestsellers/'
-    categories = [
+    @@URL = 'http://www.amazon.co.jp/gp/bestsellers/'
+    @@CATEGORIES = [
       'fashion',
       'diy',
       'dvd',
@@ -31,6 +34,8 @@ module Hunter
       'watch',
       'food-beverage'
     ]
+    def initialize
+    end
     def readUrl(url)
       charset = nil
       begin
@@ -104,7 +109,7 @@ module Hunter
       oldPrice = goods.minPrice
 
       if oldPrice == nil or newPrice < oldPrice then
-        notice oldPrice, newPrice, asin, url
+        notice oldPrice, newPrice, asin, loc
         goods.minPrice = newPrice
         goods.save
         return newPrice
@@ -129,23 +134,23 @@ module Hunter
 
     def run
       Mongoid.load!("config/mongoid.yml", :development)
-      categories.each do |category|
-          doc = readUrl(url+category)
-          doc.css('.zg_title a').each do |node|
-            goodsLoc = node.attribute('href').value
-            begin
-              asin, price = fetchPrice(goodsLoc)
-            rescue OpenURI::HTTPError => error
-              next
-            rescue URI::InvalidURIError => error
-              next
-            end
-            if price == nil then
-              next
-            end
-            puts asin + ':' + price.to_s
-            update(asin, price, goodsLoc)
+      @@CATEGORIES.each do |category|
+        doc = readUrl(@@URL+category)
+        doc.css('.zg_title a').each do |node|
+          goodsLoc = node.attribute('href').value
+          begin
+            asin, price = fetchPrice(goodsLoc)
+          rescue OpenURI::HTTPError => error
+            next
+          rescue URI::InvalidURIError => error
+            next
           end
+          if price == nil then
+            next
+          end
+          puts asin + ':' + price.to_s
+          update(asin, price, goodsLoc)
+        end
       end
     end
   end
