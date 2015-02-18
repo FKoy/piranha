@@ -1,8 +1,3 @@
-require 'mongoid'
-require 'open-uri'
-require 'nokogiri'
-require './goods.rb'
-
 module Hunter
   class Crawler
     @@URL = 'http://www.amazon.co.jp/gp/bestsellers/'
