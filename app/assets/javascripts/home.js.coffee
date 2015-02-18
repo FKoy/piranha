@@ -4,7 +4,7 @@
 
 ws_rails = new WebSocketRails "localhost:3000/websocket"
 
-ws_rails.bind "websocket_bait", (bait) -> 
+ws_rails.bind "predation", (bait) -> 
   bait_li = document.createElement("li");
   bait_li.textContent = bait;
   document.getElementById("list").appendChild(bait_li)
