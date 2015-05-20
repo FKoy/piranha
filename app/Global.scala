@@ -1,11 +1,20 @@
-package com.piranha
-
+import actors.ScheduleActor
 import akka.actor.Props
-import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
-import play.api.libs.concurrent.Akka
-import play.api.libs.concurrent.Execution.Implicits._
-import play.api.{ Application, GlobalSettings }
+import play.api.{Application, GlobalSettings}
+import play.api.Logger
+import akka.actor.ActorSystem
 
-trait Global extends GlobalSettings {
+object Global extends GlobalSettings {
+
+  override def onStart(app: Application) {
+    val system = ActorSystem("ScheduleSystem")
+    val crawler = system.actorOf(Props[ScheduleActor], "ScheduleActor")
+    crawler ! "start"
+    //QuartzSchedulerExtension(system).schedule("Every3Minutes", crawler, "start")
+  }
+
+  override def onStop(app: Application) {
+    Logger.info("Application shutdown...")
+  }
 
 }
