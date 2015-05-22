@@ -11,7 +11,8 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  ws
+  ws,
+  cache
 )
 
 libraryDependencies ++= Seq(
@@ -23,5 +24,6 @@ libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "2.3",
   "org.joda" % "joda-convert" % "1.6",
   "org.apache.commons" % "commons-email" % "1.2",
-  "io.spray" %%  "spray-json" % "1.3.1"
+  "io.spray" %%  "spray-json" % "1.3.1",
+  "org.scalatestplus" %% "play" % "1.1.0" % "test"
 )

@@ -15,15 +15,15 @@ class ScheduleActor extends Actor {
   }
 
   def start = {
-    val system = ActorSystem("CrawlSystem")
     val config = ConfigFactory.load()
     val urls = config.getStringList("urls")
+
+    val system = ActorSystem("CrawlSystem")
     for((url, index) <- urls.zipWithIndex){
       log.info("Start : "+url)
       val crawlActor = system.actorOf(Props(new CrawlActor), "CrawlActor" + index.toString)
       crawlActor ! url
     }
-
   }
 
 }

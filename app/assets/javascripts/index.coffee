@@ -2,11 +2,15 @@ self = @
 
 this.startWebSocket = (webSocketUrl) ->
   connection = new WebSocket(webSocketUrl)
-  connection.onopen = ->
+  connection.onopen = (e) ->
   connection.onerror = (e) ->
   connection.onmessage = (e) ->
-    console.log(e)
-    updateInformation(JSON.parse(e.data))
+    try
+      console.log(e)
+      updateInformation(JSON.parse(e.data))
+    catch
+      for info in JSON.parse(e.data).init.reverse()
+        updateInformation(info)
 
 updateInformation = (product) ->
   newItem = createNewItemTag(product)
@@ -79,7 +83,6 @@ createAvgPrice = (product) ->
   avgPrice = document.createElement('div')
   avgPriceClass = document.createAttribute('class')
   avgPriceClass.value = "avg-price"
-  console.log(product)
   avgPrice.textContent = 'avg : '+formatData2Price(product.avg_price)
   avgPrice.setAttributeNode(avgPriceClass)
   avgPrice

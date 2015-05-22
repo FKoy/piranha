@@ -13,7 +13,7 @@ class ProductInfo(product: Products) {
   val avgPrice: Int = Products averagePrice product
   val title: String = product.title
   val imgSrc: String = product.imgSrc
-  val url: String = ProductUrls.getByAsin(product.asin)
+  val url: String = ProductUrl.getByAsin(product.asin)
   val created_at = product.created_at
 
   implicit val productInfoWrites = new Writes[ProductInfo] {

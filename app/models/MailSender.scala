@@ -10,18 +10,18 @@ import play.api.Logger
 class MailSender(product: Products) {
   val config = Config.load
 
-  def sendMail = {
+  def deliver = {
     noticeProduct2Client
     /*if (Products beginningSales_? product) {
       createMail('sale)
-    } else*/ if (Products priceLowest_? product) {
-      deliver('min)
-    } else if (Products priceLowerThanAverage_? product) {
-      deliver('avg)
+    } else*/ if (product priceLowest_?) {
+      createMail('min)
+    } else if (product priceLowerThanAverage_?) {
+      createMail('avg)
     }
   }
 
-  private def deliver(contentType: Symbol) = {
+  private def createMail(contentType: Symbol) = {
     val recipients = config getStringList "recipients"
 
     val mail = new Mail(product, contentType)
@@ -33,6 +33,7 @@ class MailSender(product: Products) {
   private def noticeProduct2Client :Unit = {
     val url = config.getString("system.url")
     val httpRequester = new HttpRequester(url)
+    Logger.info("Found!!"+ product.toString)
     httpRequester post product
   }
 }
